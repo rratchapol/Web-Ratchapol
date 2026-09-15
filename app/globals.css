@@ -100,3 +100,24 @@ footer { display:flex; align-items:center; justify-content:space-between; gap:20
 @media (max-width:650px){.hero-about{padding:15px}.hero-about-lede p{font-size:16px}.hero-principles{grid-template-columns:1fr}.hero-principles>div,.hero-principles>div+div{min-height:auto;padding:12px 0;border-left:0}.hero-principles>div+div{border-top:1px solid var(--line)}.hero-facts{grid-template-columns:1fr;gap:0}.hero-facts span,.hero-facts span+span{padding:9px 0 0;border-left:0}.hero-facts span+span{border-top:1px solid var(--line)}}
 
 @media (max-width:650px){.experience .timeline{margin-top:27px}.experience .timeline::before{left:25px}.experience .timeline-entry{grid-template-columns:58px 1fr;padding-bottom:16px}.timeline-index{font-size:10px}.timeline-index::after{left:20px;width:10px;height:10px}.timeline-content{padding:16px}.timeline-content::before{display:none}.timeline-content strong{font-size:16px}.timeline-content p{font-size:9px!important}}
+
+/* Deliberate ambient motion: the hero behaves like a living product-system diagram. */
+.portrait-grid{animation:portrait-grid-drift 16s linear infinite}.portrait-orbit{animation:portrait-orbit-sweep 18s linear infinite}.portrait-crosshair{animation:portrait-crosshair-breathe 4.5s ease-in-out infinite}.portrait-status i{animation:project-status-pulse 2.4s ease-out infinite}.tag-ui{animation:tag-ui-float 6s ease-in-out infinite}.tag-api{animation:tag-api-float 6.8s ease-in-out -2.6s infinite}
+@keyframes portrait-grid-drift{from{background-position:0 0,0 0}to{background-position:24px 24px,24px 24px}}
+@keyframes portrait-orbit-sweep{from{transform:translateX(-50%) rotate(-15deg)}to{transform:translateX(-50%) rotate(345deg)}}
+@keyframes portrait-crosshair-breathe{0%,100%{opacity:.38}50%{opacity:.8}}
+@keyframes project-status-pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 4px rgba(255,98,77,.15)}55%{transform:scale(1.16);box-shadow:0 0 0 8px rgba(255,98,77,0)}}
+@keyframes tag-ui-float{0%,100%{transform:rotate(-7deg) translateY(0)}50%{transform:rotate(-7deg) translateY(-4px)}}
+@keyframes tag-api-float{0%,100%{transform:rotate(5deg) translateY(0)}50%{transform:rotate(5deg) translateY(-4px)}}
+
+/* Experience only starts moving after its section has been intentionally revealed. */
+.experience .timeline::before{transform:scaleY(0);transform-origin:top;transition:transform 1.15s cubic-bezier(.2,.8,.2,1)}.experience .reveal.visible .timeline::before{transform:scaleY(1)}.experience .reveal.visible .timeline-entry{animation:timeline-entry-reveal .56s cubic-bezier(.2,.8,.2,1) both}.experience .reveal.visible .timeline-entry:nth-child(2){animation-delay:.14s}.experience .reveal.visible .timeline-entry:nth-child(3){animation-delay:.28s}@keyframes timeline-entry-reveal{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* Interactive motion is reserved for controls the visitor can actually explore. */
+.fake-window,.workflow-step,.contact-email-cta svg{transition:transform .28s cubic-bezier(.2,.8,.2,1)}.workflow-step.featured{overflow:hidden}.workflow-step.featured::before{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.15) 48%,transparent 66%);background-size:220% 100%;animation:workflow-signal 5.5s ease-in-out infinite}@keyframes workflow-signal{0%,55%,100%{background-position:100% 0}78%{background-position:0 0}}
+@media (hover:hover){.project:hover .fake-window{transform:translateY(-6px) rotate(-.6deg)}.project:hover .window-content{animation:window-content-settle .38s ease-out both}.project:hover .project-overlay span{animation:overlay-arrow-nudge .7s ease-in-out infinite alternate}.skill:hover svg{animation:skill-icon-pop .38s cubic-bezier(.2,.8,.2,1) both}.contact-email-cta:hover svg{transform:translateX(5px)}}
+@keyframes window-content-settle{from{transform:translateX(-9px);opacity:.45}to{transform:translateX(0);opacity:1}}@keyframes overlay-arrow-nudge{from{transform:translateX(0)}to{transform:translateX(5px)}}@keyframes skill-icon-pop{0%{transform:translateY(0)}55%{transform:translateY(-4px) rotate(-5deg)}100%{transform:translateY(0)}}
+
+/* A narrow system rail keeps the browser chrome part of the portfolio language. */
+html{scrollbar-width:thin;scrollbar-color:var(--blue) var(--paper-deep)}
+::-webkit-scrollbar{width:14px}::-webkit-scrollbar-track{background:linear-gradient(90deg,var(--paper-deep) 0 45%,var(--line) 45% 55%,var(--paper-deep) 55% 100%)}::-webkit-scrollbar-thumb{min-height:74px;border:4px solid var(--paper-deep);border-radius:0;background:linear-gradient(180deg,var(--blue) 0 82%,var(--orange) 82% 100%);box-shadow:inset 0 0 0 1px var(--ink)}::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,var(--ink) 0 78%,var(--orange) 78% 100%)}::-webkit-scrollbar-corner{background:var(--paper-deep)}
