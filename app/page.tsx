@@ -2,7 +2,7 @@
 
 import { ArrowRight, Bot, Cable, Download, GitBranch, Link2, Mail, Menu, X, Database, Server, Layers3, Container, Workflow, Wrench, ChevronUp } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { projects } from './projects';
+import { academicProjects, independentProjects, projects } from './projects';
 
 const skills = [
   ['Frontend','Angular / React / Next.js','Responsive interfaces and component-based UI',Layers3],
@@ -183,10 +183,14 @@ export default function Home() {
         <div className="section-head reveal">
           <div>
             <p className="eyebrow">SELECTED WORK</p>
-            <h2>Selected Work. Built for Real Teams.</h2>
-            <p>Web applications and improvements delivered across CRM, admin systems and digital products.</p>
+            <h2>Work Across Teams &amp; Independent Builds.</h2>
+            <p>Professional product work alongside open-source tools built for common development workflows.</p>
           </div>
           <a href="#contact">Let&apos;s Collaborate <ArrowRight size={15} /></a>
+        </div>
+        <div className="work-group-head reveal">
+          <p>01 / PROFESSIONAL WORK</p>
+          <span>PRODUCT SYSTEMS FOR REAL TEAMS</span>
         </div>
         <div className="project-grid">
           {projects.map((p, i) => (
@@ -218,6 +222,51 @@ export default function Home() {
               <a className="case" href={`/work/${p.slug}`}>View Project <ArrowRight size={14} /></a>
             </article>
           ))}
+        </div>
+        <div className="work-group independent-work">
+          <div className="work-group-head reveal">
+            <p>02 / INDEPENDENT BUILDS</p>
+            <span>OPEN SOURCE · PRODUCT SYSTEMS · AUTOMATION</span>
+          </div>
+          <div className="independent-grid">
+            {independentProjects.map((build, index) => {
+              const BuildIcon = build.kind === 'qa' ? Cable : build.kind === 'bot' ? Bot : build.kind === 'platform' ? Workflow : Database;
+              return (
+                <article className="independent-project reveal" key={build.title} style={{ transitionDelay: `${index * 110}ms` }}>
+                  <div className="independent-project-top">
+                    <span>{build.kicker} / 0{index + 1}</span>
+                    <BuildIcon size={20} strokeWidth={1.8} />
+                  </div>
+                  <h3>{build.title}</h3>
+                  <p>{build.desc}</p>
+                  <div className="independent-package">{build.packageName}</div>
+                  <div className="tags">{build.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
+                  <a className="case" href={`/work/${build.slug}`}>View Project <ArrowRight size={14} /></a>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+        <div className="work-group academic-work">
+          <div className="work-group-head reveal">
+            <p>03 / ACADEMIC / TEAM PROJECT</p>
+            <span>PRODUCT DESIGN + MULTI-SURFACE DELIVERY</span>
+          </div>
+          <div className="academic-grid">
+            {academicProjects.map((project) => (
+              <article className="independent-project academic-project reveal" key={project.title}>
+                <div className="independent-project-top">
+                  <span>{project.kicker}</span>
+                  <Workflow size={20} strokeWidth={1.8} />
+                </div>
+                <h3>{project.title}</h3>
+                <p>{project.desc}</p>
+                <div className="independent-package">{project.packageName}</div>
+                <div className="tags">{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
+                <a className="case" href={`/work/${project.slug}`}>View Project <ArrowRight size={14} /></a>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
