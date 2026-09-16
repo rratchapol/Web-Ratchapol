@@ -64,6 +64,11 @@ export default function Home() {
     setPortraitInteracting(false);
   };
 
+  const playPortraitGreeting = () => {
+    setPortraitGreeting(false);
+    window.requestAnimationFrame(() => setPortraitGreeting(true));
+  };
+
   // Scroll progress + back-to-top visibility + active nav tracking
   useEffect(() => {
     const onScroll = () => {
@@ -198,8 +203,8 @@ export default function Home() {
             onPointerUp={handlePortraitPointerUp}
             onPointerCancel={handlePortraitPointerUp}
             onPointerLeave={() => { if (!portraitInteracting) resetPortraitPose(); }}
-            onClick={() => setPortraitGreeting(true)}
-            onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setPortraitGreeting(true); } }}
+            onClick={playPortraitGreeting}
+            onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); playPortraitGreeting(); } }}
           >
             <div className="portrait-grid" aria-hidden="true" />
             <span className="portrait-index">SYSTEM / 01</span>
@@ -208,9 +213,9 @@ export default function Home() {
             <div className="portrait-orbit" aria-hidden="true" />
             <div className="portrait-crosshair" aria-hidden="true" />
             <div className="portrait-plinth" aria-hidden="true" />
-            <div className={`portrait-card${portraitGreeting ? ' is-greeting' : ''}`} onAnimationEnd={() => setPortraitGreeting(false)}>
+            <div className={`portrait-card${portraitGreeting ? ' is-greeting' : ''}`} onAnimationEnd={(event) => { if (event.animationName === 'portrait-greeting') setPortraitGreeting(false); }}>
               <div className="portrait-model">
-                <img src="/images/ratchapol-3d-avatar-cutout.png?v=transparent" alt="A cute 3D chibi portrait of Ratchapol Rujiwatch in a navy suit" />
+                <img className="portrait-pose" src="/images/ratchapol-3d-avatar-cutout.png" alt="3D chibi portrait of Ratchapol Rujiwatch in a navy suit" />
               </div>
             </div>
             <div className="portrait-status"><i /> BASED IN THAILAND · FULL-STACK PRODUCT WORK</div>
