@@ -1,8 +1,8 @@
 'use client';
 
 import { ArrowRight, Bot, Cable, Download, GitBranch, Link2, Mail, Menu, X, Database, Server, Layers3, Container, Workflow, Wrench, ChevronUp } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { academicProjects, independentProjects, projects } from './projects';
+import { useState, useEffect, useRef } from 'react';
+import { academicProjects, independentProjects, projectCaseStudies, projects } from './projects';
 
 const skills = [
   ['Frontend','Angular / React / Next.js','Responsive interfaces and component-based UI',Layers3],
@@ -20,14 +20,48 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState('home');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showTop, setShowTop] = useState(false);
-  const [portraitTilt, setPortraitTilt] = useState({ x: 0, y: 0 });
+  const [portraitInteracting, setPortraitInteracting] = useState(false);
+  const [portraitGreeting, setPortraitGreeting] = useState(false);
+  const portraitStageRef = useRef<HTMLDivElement>(null);
   const close = () => setOpen(false);
 
   const handlePortraitMove = (event: React.PointerEvent<HTMLDivElement>) => {
     const bounds = event.currentTarget.getBoundingClientRect();
-    const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * -7;
-    const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 7;
-    setPortraitTilt({ x: y, y: x });
+    const depth = portraitInteracting ? 13 : 8;
+    const horizontal = ((event.clientX - bounds.left) / bounds.width - 0.5) * depth;
+    const vertical = ((event.clientY - bounds.top) / bounds.height - 0.5) * depth;
+    const stage = portraitStageRef.current;
+    if (!stage) return;
+    stage.style.setProperty('--portrait-x', `${vertical}deg`);
+    stage.style.setProperty('--portrait-y', `${horizontal * -1}deg`);
+    stage.style.setProperty('--portrait-shift-x', `${horizontal * 2}px`);
+    stage.style.setProperty('--portrait-shift-y', `${vertical * 1.25}px`);
+    stage.style.setProperty('--orbit-x', `${horizontal * -1.1}px`);
+    stage.style.setProperty('--orbit-y', `${vertical * -0.85}px`);
+    stage.style.setProperty('--halo-x', `${horizontal * -0.45}px`);
+    stage.style.setProperty('--halo-y', `${vertical * -0.35}px`);
+    stage.style.setProperty('--plinth-x', `${horizontal * 0.55}px`);
+    stage.style.setProperty('--portrait-scale', portraitInteracting ? '1.035' : '1.015');
+  };
+
+  const resetPortraitPose = () => {
+    const stage = portraitStageRef.current;
+    if (!stage) return;
+    ['--portrait-x', '--portrait-y', '--portrait-shift-x', '--portrait-shift-y', '--orbit-x', '--orbit-y', '--halo-x', '--halo-y', '--plinth-x'].forEach((property) => stage.style.setProperty(property, property.includes('x') || property.includes('y') ? '0px' : '0deg'));
+    stage.style.setProperty('--portrait-x', '0deg');
+    stage.style.setProperty('--portrait-y', '0deg');
+    stage.style.setProperty('--portrait-scale', '1');
+  };
+
+  const handlePortraitPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'touch') return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setPortraitInteracting(true);
+  };
+
+  const handlePortraitPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+    setPortraitInteracting(false);
   };
 
   // Scroll progress + back-to-top visibility + active nav tracking
@@ -63,8 +97,8 @@ export default function Home() {
 
   const navItems = [
     { label: 'Home', id: 'home' },
-    { label: 'Work', id: 'work' },
-    { label: 'Technology', id: 'engineering' },
+    { label: 'Case studies', id: 'work' },
+    { label: 'Engineering notes', id: 'engineering' },
     { label: 'Experience', id: 'experience' },
   ];
 
@@ -101,7 +135,7 @@ export default function Home() {
             className={`nav-contact${activeSection === 'contact' ? ' active' : ''}`}
             href="#contact"
             onClick={close}
-          >Contact <ArrowRight size={14} /></a>
+          >Profile <ArrowRight size={14} /></a>
         </nav>
         <button className="menu" onClick={() => setOpen(!open)} aria-label="Toggle menu">
           {open ? <X /> : <Menu />}
@@ -111,25 +145,25 @@ export default function Home() {
       {/* Hero */}
       <section id="home" className="hero section-pad">
         <div className="hero-copy reveal">
-          <p className="eyebrow accent">PORTFOLIO / 2026</p>
+          <p className="eyebrow accent">RATCHAPOL RUJIWATCH / PORTFOLIO 2026</p>
           <h1>RATCHAPOL<br /><span>RUJIWATCH</span></h1>
           <p className="hero-role">FULL-STACK DEVELOPER</p>
           <div className="hero-thesis">
-            <span>Full-stack development for</span>
-            <strong>PRODUCTS PEOPLE<br />USE TO GET WORK DONE.</strong>
-            <p>Clear interfaces, reliable APIs and connected workflows for <em>CRM</em> and <em>admin tools</em>.</p>
+            <span>A developer portfolio for</span>
+            <strong>PRODUCT SYSTEMS<br />BUILT TO BE USED.</strong>
+            <p>Selected CRM, admin, automation and open-source work — from the interface through the API layer.</p>
           </div>
           <div className="interface-contract" aria-label="Design intent flows into responsive UI and reliable API integration">
-            <div><b>01</b><small>understand the work</small></div>
+            <div><b>01</b><small>read the operating context</small></div>
             <span className="contract-line"><i /></span>
-            <div><b>02</b><small>make it easier to do</small></div>
+            <div><b>02</b><small>make the next action clear</small></div>
           </div>
           <div className="actions">
-            <a className="btn primary" href="#work">View My Work <ArrowRight size={16} /></a>
+            <a className="btn primary" href="#work">Explore Case Studies <ArrowRight size={16} /></a>
             <a className="btn ghost cv-download" href="/CV.pdf" download>Download CV <Download size={15} /></a>
           </div>
           <div className="focus-strip" aria-label="Core work focus">
-            <span>CRM systems</span><span>Admin tools</span><span>Product UI</span>
+            <span>Product systems</span><span>Automation</span><span>Open source</span>
           </div>
           <div className="hero-about">
             <div className="hero-about-top">
@@ -154,11 +188,18 @@ export default function Home() {
         </div>
         <div className="hero-visual">
           <div
-            className="portrait-stage"
+            ref={portraitStageRef}
+            className={`portrait-stage${portraitInteracting ? ' is-interacting' : ''}`}
             aria-label="Interactive 3D portrait of Ratchapol Rujiwatch"
+            role="button"
+            tabIndex={0}
             onPointerMove={handlePortraitMove}
-            onPointerLeave={() => setPortraitTilt({ x: 0, y: 0 })}
-            style={{ '--portrait-x': `${portraitTilt.x}deg`, '--portrait-y': `${portraitTilt.y}deg` } as React.CSSProperties}
+            onPointerDown={handlePortraitPointerDown}
+            onPointerUp={handlePortraitPointerUp}
+            onPointerCancel={handlePortraitPointerUp}
+            onPointerLeave={() => { if (!portraitInteracting) resetPortraitPose(); }}
+            onClick={() => setPortraitGreeting(true)}
+            onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setPortraitGreeting(true); } }}
           >
             <div className="portrait-grid" aria-hidden="true" />
             <span className="portrait-index">SYSTEM / 01</span>
@@ -167,13 +208,15 @@ export default function Home() {
             <div className="portrait-orbit" aria-hidden="true" />
             <div className="portrait-crosshair" aria-hidden="true" />
             <div className="portrait-plinth" aria-hidden="true" />
-            <div className="portrait-card">
-              <img src="/images/ratchapol-3d-avatar-cutout.png?v=transparent" alt="A cute 3D chibi portrait of Ratchapol Rujiwatch in a navy suit" />
+            <div className={`portrait-card${portraitGreeting ? ' is-greeting' : ''}`} onAnimationEnd={() => setPortraitGreeting(false)}>
+              <div className="portrait-model">
+                <img src="/images/ratchapol-3d-avatar-cutout.png?v=transparent" alt="A cute 3D chibi portrait of Ratchapol Rujiwatch in a navy suit" />
+              </div>
             </div>
-            <div className="portrait-status"><i /> AVAILABLE FOR PROJECTS</div>
+            <div className="portrait-status"><i /> BASED IN THAILAND · FULL-STACK PRODUCT WORK</div>
             <div className="portrait-skill-tag tag-ui">UI / SYSTEMS</div>
             <div className="portrait-skill-tag tag-api">API / WORKFLOWS</div>
-            <span className="portrait-caption">A SMALLER MODEL. A BIGGER PRODUCT MINDSET.</span>
+            <span className="portrait-caption">SELECTED SYSTEMS · PERSONAL BUILDS · ENGINEERING NOTES</span>
           </div>
         </div>
       </section>
@@ -182,15 +225,15 @@ export default function Home() {
       <section id="work" className="section section-pad">
         <div className="section-head reveal">
           <div>
-            <p className="eyebrow">SELECTED WORK</p>
-            <h2>Work Across Teams &amp; Independent Builds.</h2>
-            <p>Professional product work alongside open-source tools built for common development workflows.</p>
+            <p className="eyebrow">WORK RECORD</p>
+            <h2>Systems I&apos;ve helped build.</h2>
+            <p>A focused record of product systems, automation and open-source work — with the problem, scope and ownership made explicit.</p>
           </div>
-          <a href="#contact">Let&apos;s Collaborate <ArrowRight size={15} /></a>
+          <span className="work-index">11 PROJECT RECORDS</span>
         </div>
         <div className="work-group-head reveal">
-          <p>01 / PROFESSIONAL WORK</p>
-          <span>PRODUCT SYSTEMS FOR REAL TEAMS</span>
+          <p>01 / PROFESSIONAL WORK ARCHIVE</p>
+          <span>COMMISSIONED PRODUCT SYSTEMS</span>
         </div>
         <div className="project-grid">
           {projects.map((p, i) => (
@@ -199,34 +242,19 @@ export default function Home() {
               key={p.title}
               style={{ transitionDelay: `${i * 90}ms` }}
             >
-              <div className="project-top"><span>{p.n}</span><small>Project overview</small></div>
+              <div className="project-top"><span>{p.n}</span><small>PROJECT RECORD</small></div>
               <h3>{p.title}</h3>
               <p>{p.desc}</p>
-              <div className={'project-preview ' + p.tone}>
-                <div className="fake-window">
-                  <div className="window-bar"><i /><i /><i /></div>
-                  <div className="window-content">
-                    <div className="fake-side" />
-                    <div className="fake-main">
-                      <b>{p.preview}</b>
-                      <span /><span /><span />
-                    </div>
-                  </div>
-                </div>
-                <div className="project-overlay">
-                  <p>{p.desc}</p>
-                  <span>View Project <ArrowRight size={12} /></span>
-                </div>
-              </div>
+              <div className={'project-evidence ' + p.tone}><span>{p.category}</span><b>{p.preview}</b><small>ROLE / {projectCaseStudies[p.slug].role}</small></div>
               <div className="tags">{p.tags.map(t => <span key={t}>{t}</span>)}</div>
-              <a className="case" href={`/work/${p.slug}`}>View Project <ArrowRight size={14} /></a>
+              <a className="case" href={`/work/${p.slug}`}>Read Project Record <ArrowRight size={14} /></a>
             </article>
           ))}
         </div>
         <div className="work-group independent-work">
           <div className="work-group-head reveal">
-            <p>02 / INDEPENDENT BUILDS</p>
-            <span>OPEN SOURCE · PRODUCT SYSTEMS · AUTOMATION</span>
+            <p>02 / PERSONAL BUILDS &amp; OPEN SOURCE</p>
+            <span>EXPERIMENTS THAT BECAME USEFUL TOOLS</span>
           </div>
           <div className="independent-grid">
             {independentProjects.map((build, index) => {
@@ -241,7 +269,7 @@ export default function Home() {
                   <p>{build.desc}</p>
                   <div className="independent-package">{build.packageName}</div>
                   <div className="tags">{build.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
-                  <a className="case" href={`/work/${build.slug}`}>View Project <ArrowRight size={14} /></a>
+                  <a className="case" href={`/work/${build.slug}`}>Read Case Study <ArrowRight size={14} /></a>
                 </article>
               );
             })}
@@ -249,7 +277,7 @@ export default function Home() {
         </div>
         <div className="work-group academic-work">
           <div className="work-group-head reveal">
-            <p>03 / ACADEMIC / TEAM PROJECT</p>
+            <p>03 / ACADEMIC TEAM PROJECT</p>
             <span>PRODUCT DESIGN + MULTI-SURFACE DELIVERY</span>
           </div>
           <div className="academic-grid">
@@ -263,7 +291,7 @@ export default function Home() {
                 <p>{project.desc}</p>
                 <div className="independent-package">{project.packageName}</div>
                 <div className="tags">{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
-                <a className="case" href={`/work/${project.slug}`}>View Project <ArrowRight size={14} /></a>
+                <a className="case" href={`/work/${project.slug}`}>Read Project Record <ArrowRight size={14} /></a>
               </article>
             ))}
           </div>
@@ -274,33 +302,33 @@ export default function Home() {
       <section id="engineering" className="section engineering section-pad">
         <div className="section-head reveal">
           <div>
-            <p className="eyebrow">TECHNOLOGY FOCUS</p>
-            <h2>Tools I Use to Build Better Web Experiences</h2>
-            <p>A practical toolkit for responsive interfaces, API-connected workflows and AI-assisted development.</p>
+            <p className="eyebrow">ENGINEERING PRACTICE</p>
+            <h2>Patterns I rely on when building product systems.</h2>
+            <p>Not a service menu — a working reference for the tools and decisions behind the case studies above.</p>
           </div>
         </div>
         <div className="engineering-grid">
           <div className="architecture reveal">
             <div className="architecture-head">
-              <p>HOW I WORK</p>
-              <span>BUILD SYSTEM / 01—04</span>
+              <p>ENGINEERING NOTES</p>
+              <span>WORKING PRACTICE / 01—04</span>
             </div>
             <div className="workflow">
               <div className="workflow-step">
                 <span>01</span>
-                <div><b>Understand the user</b><p>Turn needs and constraints into a clear product direction.</p></div>
+                <div><b>Read the operating context</b><p>Start with the people, constraints and information behind the request.</p></div>
               </div>
               <div className="workflow-step">
                 <span>02</span>
-                <div><b>Shape the interface</b><p>Build responsive UI that feels direct and dependable.</p></div>
+                <div><b>Make the interface legible</b><p>Build responsive UI that makes the next action and current state clear.</p></div>
               </div>
               <div className="workflow-step featured">
                 <span>03</span>
-                <div><b>Connect the workflow</b><p>Integrate APIs, data and services where the work happens.</p></div>
+                <div><b>Connect the system</b><p>Bring APIs, data and external tools into the place where work happens.</p></div>
               </div>
               <div className="workflow-step">
                 <span>04</span>
-                <div><b>Ship and improve</b><p>Deliver a maintainable experience, ready to iterate.</p></div>
+                <div><b>Leave room to improve</b><p>Keep the product maintainable enough to observe, refine and extend.</p></div>
               </div>
             </div>
             <div className="tool-rail">
@@ -308,7 +336,7 @@ export default function Home() {
               <span>DATA</span><p>Laravel · NestJS · REST API</p>
               <span>SHIP</span><p>GA4 · Docker · Git</p>
             </div>
-            <div className="architecture-stamp">DESIGNED<br />TO<br /><i>CONNECT</i></div>
+            <div className="architecture-stamp">BUILT<br />TO<br /><i>OPERATE</i></div>
           </div>
           <div className="skill-grid">
             {skills.map(([name, a, b, Icon], i) => (
@@ -324,8 +352,8 @@ export default function Home() {
       {/* Experience */}
       <section id="experience" className="section experience section-pad">
         <div className="reveal">
-          <p className="eyebrow">EXPERIENCE HIGHLIGHTS</p>
-          <h2>Experience Built Around Real Product Needs</h2>
+          <p className="eyebrow">EXPERIENCE TIMELINE</p>
+          <h2>Product work across internal systems and real-world workflows.</h2>
           <div className="timeline">
             <div className="timeline-entry">
               <span className="timeline-index">01</span>
@@ -364,10 +392,10 @@ export default function Home() {
       {/* Contact */}
       <section id="contact" className="contact section-pad">
         <div className="reveal">
-          <p className="eyebrow">CONTACT</p>
-          <h2>Let's Build Something.</h2>
-          <p>Have a web project, product idea or collaboration in mind?<br />I&apos;d be glad to hear what you&apos;re building.</p>
-          <p className="availability"><i /> Available for Full-stack Developer opportunities.</p>
+          <p className="eyebrow">PROFILE &amp; CONTACT</p>
+          <h2>Open to full-stack product roles.</h2>
+          <p>I&apos;m interested in teams building internal products, customer workflows and tools that need thoughtful engineering from interface to API.</p>
+          <p className="availability"><i /> Based in Bang Pa In, Thailand · Computer Engineering, KMITL</p>
           <div className="contact-links">
             <a href="mailto:rratchapol@gmail.com"><Mail size={17} /> rratchapol@gmail.com</a>
             <a href="https://github.com/rratchapol" target="_blank" rel="noreferrer"><GitBranch size={17} /> github.com/rratchapol</a>
@@ -375,16 +403,16 @@ export default function Home() {
           </div>
         </div>
         <div className="contact-actions reveal" style={{ transitionDelay: '110ms' }}>
-          <p className="contact-actions-label">BEST WAY TO REACH ME</p>
-          <h3>Open an email draft.</h3>
-          <p>This opens your email app with the recipient already filled in. For project work, include a short outline, timeline and any useful links.</p>
+          <p className="contact-actions-label">CONTACT DETAILS</p>
+          <h3>Start with the work.</h3>
+          <p>For a role, interview or product conversation, email me with the team context and the problem you&apos;re working on.</p>
           <a className="contact-email-cta" href="mailto:rratchapol@gmail.com">
             <Mail size={18} />
             <span><small>EMAIL</small>rratchapol@gmail.com</span>
             <ArrowRight size={18} />
           </a>
           <div className="contact-alternatives">
-            <span>OR FIND ME ON</span>
+            <span>ALSO ON</span>
             <a href="https://github.com/rratchapol" target="_blank" rel="noreferrer"><GitBranch size={15} /> GitHub</a>
             <a href="https://www.linkedin.com/in/ratchapol-rujiwach" target="_blank" rel="noreferrer"><Link2 size={15} /> LinkedIn</a>
           </div>
