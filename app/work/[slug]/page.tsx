@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowLeft, ArrowUpRight, Check, Layers3 } from 'lucide-react';
 import { notFound } from 'next/navigation';
-import { academicProjects, independentProjects, projectCaseStudies, projects } from '../../projects';
+import { academicProjects, independentProjects, projectCaseStudies, projectVisualRecords, projects } from '../../projects';
 
 const detailProjects = [...projects, ...independentProjects, ...academicProjects];
 
@@ -15,6 +15,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
 
   if (!project) notFound();
   const caseStudy = projectCaseStudies[project.slug];
+  const visualRecord = projectVisualRecords[project.slug];
   const workType = 'kicker' in project ? project.kicker : 'COMMISSIONED WORK';
 
   return (
@@ -29,14 +30,40 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
       </nav>
       <section className="detail-hero">
         <div className="detail-hero-mark"><span>{project.n}</span><p>{workType}</p></div>
-        <p className="eyebrow">{project.category}</p>
-        <h1>{project.title}</h1>
-        <p>{project.desc}</p>
-        <div className="tags">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
+        <div className="detail-hero-copy">
+          <p className="eyebrow">{project.category}</p>
+          <h1>{project.title}</h1>
+          <p>{project.desc}</p>
+          <div className="tags">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
+        </div>
+        <div className="detail-portrait" aria-hidden="true">
+          <div className="detail-portrait-sprite"><img src="/images/ratchapol-3d-sprite-sheet-detail.png" alt="" /></div>
+          <span>PROJECT COMPANION</span>
+        </div>
         <div className="detail-facts" aria-label="Project overview">
           <div><span>ROLE</span><strong>{caseStudy.role}</strong></div>
           <div><span>FOCUS</span><strong>{caseStudy.focus}</strong></div>
           <div><span>DELIVERABLES</span><strong>{caseStudy.deliverables.length} documented outputs</strong></div>
+        </div>
+      </section>
+      <section className={`detail-visual-record detail-visual-record-${visualRecord.disclosure}`} aria-labelledby="visual-record-title">
+        <div className="detail-visual-heading">
+          <p className="eyebrow">VISUAL EVIDENCE</p>
+          <div><h2 id="visual-record-title">What can be shown.</h2><p>{visualRecord.note}</p></div>
+          <span className="detail-disclosure">{visualRecord.disclosure === 'limited' ? 'LIMITED VISUALS' : 'PUBLIC-READY'}</span>
+        </div>
+        <div className="detail-media-slots">
+          {visualRecord.slots.map((slot, index) => <figure className={`detail-media-slot${index === 0 ? ' detail-media-slot-primary' : ''} is-${slot.state}${slot.src ? ' has-media' : ''}`} key={slot.title}>
+            <div className="detail-media-frame">
+              {slot.src ? <img src={slot.src} alt={`${project.title} — ${slot.title}`} /> : <div className="detail-media-placeholder" aria-hidden="true">
+                <span className="detail-media-index">0{index + 1}</span>
+                <div className="detail-media-bars"><i /><i /><i /></div>
+                <b>{slot.state === 'restricted' ? 'SELECTED / REDACTED' : 'VISUAL SLOT'}</b>
+                <small>{slot.state === 'restricted' ? 'Approved excerpt only' : 'Ready for an approved capture'}</small>
+              </div>}
+            </div>
+            <figcaption><strong>{slot.title}</strong><span>{slot.caption}</span></figcaption>
+          </figure>)}
         </div>
       </section>
       <section className="detail-case-study">

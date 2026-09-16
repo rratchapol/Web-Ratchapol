@@ -277,3 +277,50 @@ export const projectCaseStudies: Record<string, CaseStudy> = {
     deliverables: ['Flutter mobile application concept', 'Laravel backend and Angular admin scope', 'Python recommendation component', 'GCP-deployed team prototype'],
   },
 };
+
+type VisualSlot = {
+  title: string;
+  caption: string;
+  state: 'reserved' | 'restricted';
+  src?: string;
+};
+
+type ProjectVisualRecord = {
+  disclosure: 'public-ready' | 'limited';
+  note: string;
+  slots: readonly VisualSlot[];
+};
+
+const limitedVisuals = (scope: string): ProjectVisualRecord => ({
+  disclosure: 'limited',
+  note: `Selected visuals only. ${scope}`,
+  slots: [
+    { title: 'Public-safe overview', caption: 'A redacted product view or approved interface excerpt.', state: 'restricted' },
+    { title: 'Workflow summary', caption: 'A public-safe flow, component or annotated interaction.', state: 'reserved' },
+    { title: 'System detail', caption: 'A diagram or outcome view with sensitive information removed.', state: 'restricted' },
+  ],
+});
+
+const publicReadyVisuals = (scope: string): ProjectVisualRecord => ({
+  disclosure: 'public-ready',
+  note: `${scope} Screens can be added individually when a public-ready capture is available.`,
+  slots: [
+    { title: 'Product overview', caption: 'Primary screen, entry point or package example.', state: 'reserved' },
+    { title: 'Key workflow', caption: 'The interaction, automation path or user journey.', state: 'reserved' },
+    { title: 'System detail', caption: 'A result state, dashboard or implementation detail.', state: 'reserved' },
+  ],
+});
+
+export const projectVisualRecords: Record<string, ProjectVisualRecord> = {
+  'nci-crm': limitedVisuals('Internal CRM data and role-specific screens are not shown in full.'),
+  'trr-admin-system': limitedVisuals('Operational dashboards and location information are shared only in approved form.'),
+  'sos-wasty': limitedVisuals('CRM and LINE LIFF screens are represented only through approved excerpts.'),
+  'ldb-pro': limitedVisuals('Event-participant data is not included in public visuals.'),
+  cmdf: limitedVisuals('Product screens and analytics data require a public-safe treatment.'),
+  'nfi-classwin': limitedVisuals('The live website is represented through non-sensitive implementation evidence.'),
+  'thai-address-select': publicReadyVisuals('This is an open-source npm package.'),
+  'pet-community-thailand': publicReadyVisuals('This is an independent full-stack build.'),
+  'tradingview-line-alert-bot': publicReadyVisuals('This is a personal notification automation, not a trading service.'),
+  'qa-mcp': publicReadyVisuals('The workflow can be shown through task, test and result views.'),
+  'kmitl-xchange': limitedVisuals('Team-project visuals can be added once the appropriate assets are selected.'),
+};
