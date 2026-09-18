@@ -2,7 +2,7 @@
 
 import { ArrowRight, Bot, Cable, Download, GitBranch, Link2, Mail, Menu, X, Database, Server, Layers3, Container, Workflow, Wrench, ChevronUp } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
-import { academicProjects, independentProjects, projectCaseStudies, projects } from './projects';
+import { independentProjects, projectCaseStudies, projects } from './projects';
 
 const skills = [
   ['Frontend','Angular / React / Next.js','Responsive interfaces and component-based UI',Layers3],
@@ -14,6 +14,13 @@ const skills = [
   ['MCP Workflows','Tool-connected AI development','Use project context and connected tools to research, build and debug faster',Cable],
   ['Development Tools','VS Code / Docker / Git','A practical local workflow from build to delivery',Wrench],
 ] as const;
+
+const featuredProjectSlugs = ['qa-mcp', 'tradingview-line-alert-bot', 'nci-crm'];
+const portfolioProjects = [...projects, ...independentProjects];
+const featuredProjects = featuredProjectSlugs.flatMap((slug) => {
+  const project = portfolioProjects.find((item) => item.slug === slug);
+  return project ? [project] : [];
+});
 
 export default function Home() {
   const [open, setOpen] = useState(false);
@@ -96,7 +103,11 @@ export default function Home() {
       (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
       { threshold: 0.08 }
     );
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    document.querySelectorAll('.reveal').forEach((el) => {
+      observer.observe(el);
+      const bounds = el.getBoundingClientRect();
+      if (bounds.top < window.innerHeight && bounds.bottom > 0) el.classList.add('visible');
+    });
     return () => observer.disconnect();
   }, []);
 
@@ -232,74 +243,36 @@ export default function Home() {
           <div>
             <p className="eyebrow">WORK RECORD</p>
             <h2>Systems I&apos;ve helped build.</h2>
-            <p>A focused record of product systems, automation and open-source work — with the problem, scope and ownership made explicit.</p>
+            <p>Three representative builds first — then the complete record of product systems, automation and open-source work.</p>
           </div>
-          <span className="work-index">11 PROJECT RECORDS</span>
+          <span className="work-index">03 FEATURED / 11 TOTAL</span>
         </div>
-        <div className="work-group-head reveal">
-          <p>01 / PROFESSIONAL WORK ARCHIVE</p>
-          <span>COMMISSIONED PRODUCT SYSTEMS</span>
-        </div>
-        <div className="project-grid">
-          {projects.map((p, i) => (
-            <article
-              className="project reveal"
-              key={p.title}
-              style={{ transitionDelay: `${i * 90}ms` }}
-            >
-              <div className="project-top"><span>{p.n}</span><small>PROJECT RECORD</small></div>
-              <h3>{p.title}</h3>
-              <p>{p.desc}</p>
-              <div className={'project-evidence ' + p.tone}><span>{p.category}</span><b>{p.preview}</b><small>ROLE / {projectCaseStudies[p.slug].role}</small></div>
-              <div className="tags">{p.tags.map(t => <span key={t}>{t}</span>)}</div>
-              <a className="case" href={`/work/${p.slug}`}>Read Project Record <ArrowRight size={14} /></a>
+        <div className="featured-grid">
+          {featuredProjects.map((project, index) => (
+            <article className={`featured-case featured-case-${index + 1} reveal`} key={project.slug}>
+              <div className="featured-case-top">
+                <span>FEATURED / 0{index + 1}</span>
+                <small>{project.category}</small>
+              </div>
+              <div className="featured-case-copy">
+                <p>{index === 0 ? 'AI QA WORKFLOW' : index === 1 ? 'PERSONAL AUTOMATION' : 'PRODUCTION SYSTEM'}</p>
+                <h3>{project.title}</h3>
+                <strong>{projectCaseStudies[project.slug].focus}</strong>
+                <span>{project.desc}</span>
+              </div>
+              <div className="featured-case-bottom">
+                <div className="tags">{project.tags.slice(0, 3).map(tag => <span key={tag}>{tag}</span>)}</div>
+                <a className="case" href={`/work/${project.slug}`}>Read Case Study <ArrowRight size={14} /></a>
+              </div>
             </article>
           ))}
         </div>
-        <div className="work-group independent-work">
-          <div className="work-group-head reveal">
-            <p>02 / PERSONAL BUILDS &amp; OPEN SOURCE</p>
-            <span>EXPERIMENTS THAT BECAME USEFUL TOOLS</span>
+        <div className="work-archive-control reveal">
+          <div>
+            <p className="eyebrow">COMPLETE WORK ARCHIVE</p>
+            <span>Open all 11 project records across professional work, independent builds and academic work.</span>
           </div>
-          <div className="independent-grid">
-            {independentProjects.map((build, index) => {
-              const BuildIcon = build.kind === 'qa' ? Cable : build.kind === 'bot' ? Bot : build.kind === 'platform' ? Workflow : Database;
-              return (
-                <article className="independent-project reveal" key={build.title} style={{ transitionDelay: `${index * 110}ms` }}>
-                  <div className="independent-project-top">
-                    <span>{build.kicker} / 0{index + 1}</span>
-                    <BuildIcon size={20} strokeWidth={1.8} />
-                  </div>
-                  <h3>{build.title}</h3>
-                  <p>{build.desc}</p>
-                  <div className="independent-package">{build.packageName}</div>
-                  <div className="tags">{build.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
-                  <a className="case" href={`/work/${build.slug}`}>Read Case Study <ArrowRight size={14} /></a>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-        <div className="work-group academic-work">
-          <div className="work-group-head reveal">
-            <p>03 / ACADEMIC TEAM PROJECT</p>
-            <span>PRODUCT DESIGN + MULTI-SURFACE DELIVERY</span>
-          </div>
-          <div className="academic-grid">
-            {academicProjects.map((project) => (
-              <article className="independent-project academic-project reveal" key={project.title}>
-                <div className="independent-project-top">
-                  <span>{project.kicker}</span>
-                  <Workflow size={20} strokeWidth={1.8} />
-                </div>
-                <h3>{project.title}</h3>
-                <p>{project.desc}</p>
-                <div className="independent-package">{project.packageName}</div>
-                <div className="tags">{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
-                <a className="case" href={`/work/${project.slug}`}>Read Project Record <ArrowRight size={14} /></a>
-              </article>
-            ))}
-          </div>
+          <a className="work-archive-toggle" href="/projects">View all project records <ArrowRight size={15} /></a>
         </div>
       </section>
 
@@ -307,39 +280,39 @@ export default function Home() {
       <section id="engineering" className="section engineering section-pad">
         <div className="section-head reveal">
           <div>
-            <p className="eyebrow">ENGINEERING PRACTICE</p>
-            <h2>Patterns I rely on when building product systems.</h2>
-            <p>Not a service menu — a working reference for the tools and decisions behind the case studies above.</p>
+            <p className="eyebrow">TECH STACK &amp; TOOLS</p>
+            <h2>The stack behind the systems.</h2>
+            <p>A practical toolkit for shipping product interfaces, connected workflows and reliable delivery — used throughout the work records above.</p>
           </div>
         </div>
         <div className="engineering-grid">
           <div className="architecture reveal">
             <div className="architecture-head">
-              <p>ENGINEERING NOTES</p>
-              <span>WORKING PRACTICE / 01—04</span>
+              <p>FULL-STACK APPROACH</p>
+              <span>PRODUCT TO DELIVERY / 01—04</span>
             </div>
             <div className="workflow">
               <div className="workflow-step">
                 <span>01</span>
-                <div><b>Read the operating context</b><p>Start with the people, constraints and information behind the request.</p></div>
+                <div><b>Understand the product context</b><p>Map users, rules, data and constraints before defining the solution.</p></div>
               </div>
               <div className="workflow-step">
                 <span>02</span>
-                <div><b>Make the interface legible</b><p>Build responsive UI that makes the next action and current state clear.</p></div>
+                <div><b>Design the system flow</b><p>Turn requirements into clear journeys, interface states and API contracts.</p></div>
               </div>
               <div className="workflow-step featured">
                 <span>03</span>
-                <div><b>Connect the system</b><p>Bring APIs, data and external tools into the place where work happens.</p></div>
+                <div><b>Build across the stack</b><p>Connect frontend, backend services, data and external tools into one workflow.</p></div>
               </div>
               <div className="workflow-step">
                 <span>04</span>
-                <div><b>Leave room to improve</b><p>Keep the product maintainable enough to observe, refine and extend.</p></div>
+                <div><b>Deliver, observe, improve</b><p>Ship maintainable work, verify behavior and refine it through real use.</p></div>
               </div>
             </div>
             <div className="tool-rail">
-              <span>UI</span><p>Angular · React · Next.js</p>
-              <span>DATA</span><p>Laravel · NestJS · REST API</p>
-              <span>SHIP</span><p>GA4 · Docker · Git</p>
+              <span>CLIENT</span><p>Angular · React · Next.js</p>
+              <span>SERVICES</span><p>Laravel · NestJS · REST API</p>
+              <span>OPERATE</span><p>GA4 · Docker · Git</p>
             </div>
             <div className="architecture-stamp">BUILT<br />TO<br /><i>OPERATE</i></div>
           </div>
@@ -356,41 +329,59 @@ export default function Home() {
 
       {/* Experience */}
       <section id="experience" className="section experience section-pad">
-        <div className="reveal">
+        {/* Saved fallbacks: experience-layout-two-column and experience-layout-single-column. */}
+        <div className="experience-layout experience-layout-alternating reveal">
+          <div className="experience-main">
           <p className="eyebrow">EXPERIENCE TIMELINE</p>
           <h2>Product work across internal systems and real-world workflows.</h2>
+          <div className="experience-timeline-head" aria-label="Timeline summary">
+            <span>CAREER RECORD / 03 MILESTONES</span>
+            <span>PRODUCT SYSTEMS · CRM · AUTOMATION</span>
+          </div>
           <div className="timeline">
             <div className="timeline-entry">
-              <span className="timeline-index">01</span>
-              <div className="timeline-content">
-              <b>WITSAWA CORPORATION CO., LTD.</b>
-              <strong>Web Applications &amp; Enhancements</strong>
-              <span>Eastspring · LDB Pro · CMDF · Well Kid · NFI x Classwin</span>
-              <p>Contributed to a varied portfolio of web initiatives, helping teams turn operational requirements, existing systems and design direction into more reliable digital experiences. The work ranged from compatibility improvements and focused workflow tools to user-interface delivery, analytics and ongoing product enhancement.</p>
-              <p>For Eastspring, helped bridge the gap between Internet Explorer and modern browsers. Built a custom QR code scanning module for LDB Pro to support event participation by doctors and pharmacists, transformed CMDF design mockups into working UI with Google Analytics 4, resolved Well Kid library incompatibilities after SDK updates, and improved the NFI x Classwin website through fixes and new features.</p>
-              </div>
+              <div className="timeline-index"><span>01</span><small>CAREER<br />RECORD</small></div>
+              <article className="timeline-content">
+                <div className="timeline-card-top"><b>WITSAWA CORPORATION CO., LTD.</b><span>PRODUCT DELIVERY</span></div>
+                <strong>Web Applications &amp; Enhancements</strong>
+                <p className="timeline-scope">Eastspring · LDB Pro · CMDF · Well Kid · NFI x Classwin</p>
+                <p>Contributed to a varied portfolio of web initiatives, helping teams turn operational requirements, existing systems and design direction into more reliable digital experiences. The work ranged from compatibility improvements and focused workflow tools to user-interface delivery, analytics and ongoing product enhancement.</p>
+                <p>For Eastspring, helped bridge the gap between Internet Explorer and modern browsers. Built a custom QR code scanning module for LDB Pro to support event participation by doctors and pharmacists, transformed CMDF design mockups into working UI with Google Analytics 4, resolved Well Kid library incompatibilities after SDK updates, and improved the NFI x Classwin website through fixes and new features.</p>
+              </article>
             </div>
             <div className="timeline-entry">
-              <span className="timeline-index">02</span>
-              <div className="timeline-content">
-              <b>ASCEND CO., LTD.</b>
-              <strong>CRM &amp; LINE LIFF</strong>
-              <span>SOS Wasty</span>
-              <p>Worked on SOS Wasty, a CRM and LINE LIFF experience designed to keep workflows accessible across devices. The focus was on delivering a clear, responsive frontend while ensuring the interface connected smoothly with the underlying APIs.</p>
-              <p>Used Next.js, Tailwind CSS and Ant Design to build polished interface components and responsive layouts. The result was a practical customer-facing and operational experience that brings CRM interactions into the LINE ecosystem without compromising usability.</p>
-              </div>
+              <div className="timeline-index"><span>02</span><small>CAREER<br />RECORD</small></div>
+              <article className="timeline-content">
+                <div className="timeline-card-top"><b>ASCEND CO., LTD.</b><span>CONNECTED WORKFLOW</span></div>
+                <strong>CRM &amp; LINE LIFF</strong>
+                <p className="timeline-scope">SOS Wasty</p>
+                <p>Worked on SOS Wasty, a CRM and LINE LIFF experience designed to keep workflows accessible across devices. The focus was on delivering a clear, responsive frontend while ensuring the interface connected smoothly with the underlying APIs.</p>
+                <p>Used Next.js, Tailwind CSS and Ant Design to build polished interface components and responsive layouts. The result was a practical customer-facing and operational experience that brings CRM interactions into the LINE ecosystem without compromising usability.</p>
+              </article>
             </div>
             <div className="timeline-entry">
-              <span className="timeline-index">03</span>
-              <div className="timeline-content">
-              <b>ASHA TECH CORPORATION</b>
-              <strong>CRM &amp; Admin Systems</strong>
-              <span>NCI CRM · TRR Admin System</span>
-              <p>Developed web interfaces for CRM and administrative workflows where usability, access control and clear information management were central to the product. This included building responsive screens that help internal teams work confidently with forms, data and day-to-day operational tasks.</p>
-              <p>For the National Cancer Institute CRM, created role-based user permissions with Angular and Tailwind CSS, then developed responsive forms connected to APIs for internal staff. For Thai Roong Ruang Group, built an admin system with dashboards, charts, calendars, data tables and forms, including location views generated from latitude and longitude data.</p>
-              </div>
+              <div className="timeline-index"><span>03</span><small>CAREER<br />RECORD</small></div>
+              <article className="timeline-content">
+                <div className="timeline-card-top"><b>ASHA TECH CORPORATION</b><span>INTERNAL OPERATIONS</span></div>
+                <strong>CRM &amp; Admin Systems</strong>
+                <p className="timeline-scope">NCI CRM · TRR Admin System</p>
+                <p>Developed web interfaces for CRM and administrative workflows where usability, access control and clear information management were central to the product. This included building responsive screens that help internal teams work confidently with forms, data and day-to-day operational tasks.</p>
+                <p>For the National Cancer Institute CRM, created role-based user permissions with Angular and Tailwind CSS, then developed responsive forms connected to APIs for internal staff. For Thai Roong Ruang Group, built an admin system with dashboards, charts, calendars, data tables and forms, including location views generated from latitude and longitude data.</p>
+              </article>
             </div>
           </div>
+          </div>
+          <aside className="experience-side" aria-label="Work throughline">
+            <p className="eyebrow">WORK THROUGHLINE</p>
+            <h3>What connects the roles.</h3>
+            <p>Each milestone adds another part of the same practice: practical systems that make work clearer and easier to move forward.</p>
+            <ol className="experience-throughline-list">
+              <li><span>01</span><div><b>Product systems</b><p>CRM, admin and workflow tools people return to every day.</p></div></li>
+              <li><span>02</span><div><b>Connected services</b><p>Interfaces joined to APIs, analytics and external channels.</p></div></li>
+              <li><span>03</span><div><b>Practical delivery</b><p>Feature work and improvements that stay usable in production.</p></div></li>
+            </ol>
+            <div className="experience-side-stamp">FULL-STACK<br /><i>PRODUCT WORK</i></div>
+          </aside>
         </div>
       </section>
 
