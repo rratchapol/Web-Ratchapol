@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowUpRight, Check, Layers3 } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { academicProjects, independentProjects, projectCaseStudies, projectVisualRecords, projects } from '../../projects';
+import { ProjectVisualGallery } from '../project-visual-gallery';
 
 const detailProjects = [...projects, ...independentProjects, ...academicProjects];
 
@@ -46,26 +47,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
           <div><span>DELIVERABLES</span><strong>{caseStudy.deliverables.length} documented outputs</strong></div>
         </div>
       </section>
-      <section className={`detail-visual-record detail-visual-record-${visualRecord.disclosure}`} aria-labelledby="visual-record-title">
-        <div className="detail-visual-heading">
-          <p className="eyebrow">VISUAL EVIDENCE</p>
-          <div><h2 id="visual-record-title">What can be shown.</h2><p>{visualRecord.note}</p></div>
-          <span className="detail-disclosure">{visualRecord.disclosure === 'limited' ? 'LIMITED VISUALS' : 'PUBLIC-READY'}</span>
-        </div>
-        <div className="detail-media-slots">
-          {visualRecord.slots.map((slot, index) => <figure className={`detail-media-slot${index === 0 ? ' detail-media-slot-primary' : ''} is-${slot.state}${slot.src ? ' has-media' : ''}`} key={slot.title}>
-            <div className="detail-media-frame">
-              {slot.src ? <img src={slot.src} alt={`${project.title} — ${slot.title}`} /> : <div className="detail-media-placeholder" aria-hidden="true">
-                <span className="detail-media-index">0{index + 1}</span>
-                <div className="detail-media-bars"><i /><i /><i /></div>
-                <b>{slot.state === 'restricted' ? 'SELECTED / REDACTED' : 'VISUAL SLOT'}</b>
-                <small>{slot.state === 'restricted' ? 'Approved excerpt only' : 'Ready for an approved capture'}</small>
-              </div>}
-            </div>
-            <figcaption><strong>{slot.title}</strong><span>{slot.caption}</span></figcaption>
-          </figure>)}
-        </div>
-      </section>
+      <ProjectVisualGallery projectTitle={project.title} disclosure={visualRecord.disclosure} note={visualRecord.note} slots={visualRecord.slots} />
       <section className="detail-case-study">
         <aside className="detail-rail" aria-label="Case study sections">
           <p>CASE STUDY</p>

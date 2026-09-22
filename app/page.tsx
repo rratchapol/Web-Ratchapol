@@ -245,7 +245,7 @@ export default function Home() {
             <h2>Systems I&apos;ve helped build.</h2>
             <p>Three representative builds first — then the complete record of product systems, automation and open-source work.</p>
           </div>
-          <span className="work-index">03 FEATURED / 11 TOTAL</span>
+          <span className="work-index">03 FEATURED / 10 TOTAL</span>
         </div>
         <div className="featured-grid">
           {featuredProjects.map((project, index) => (
@@ -270,7 +270,7 @@ export default function Home() {
         <div className="work-archive-control reveal">
           <div>
             <p className="eyebrow">COMPLETE WORK ARCHIVE</p>
-            <span>Open all 11 project records across professional work, independent builds and academic work.</span>
+            <span>Open all 10 project records across professional work, independent builds and academic work.</span>
           </div>
           <a className="work-archive-toggle" href="/projects">View all project records <ArrowRight size={15} /></a>
         </div>

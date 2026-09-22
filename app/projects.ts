@@ -24,15 +24,7 @@ export const projects = [
     outcome: 'Delivered a polished, responsive experience that supports customer-facing and operational interactions across devices.',
   },
   {
-    slug: 'ldb-pro', n: '04', title: 'LDB Pro', category: 'Event workflow · Witsawa Corporation',
-    desc: 'A custom QR code scanning module that streamlines event participation for doctors and pharmacists.',
-    tags: ['QR Code', 'Web Application', 'Workflow Tool'], tone: 'ldb', preview: 'QR check-in flow',
-    context: 'Event participation required a faster, clearer check-in process for doctors and pharmacists.',
-    contribution: 'Built a custom QR code scanning module focused on making attendee verification simple and practical during the event flow.',
-    outcome: 'Delivered a focused web workflow that helps teams manage event participation with less manual handling.',
-  },
-  {
-    slug: 'cmdf', n: '05', title: 'CMDF', category: 'Product interface · Witsawa Corporation',
+    slug: 'cmdf', n: '04', title: 'CMDF', category: 'Product interface · Witsawa Corporation',
     desc: 'Turned design mockups into polished UI and connected Google Analytics 4 for product measurement.',
     tags: ['UI Implementation', 'Google Analytics 4', 'Product UI'], tone: 'cmdf', preview: 'Product interface',
     context: 'The product needed design mockups translated into a cohesive working interface, with measurement in place for future product decisions.',
@@ -40,7 +32,7 @@ export const projects = [
     outcome: 'Created a production-ready interface with a clearer path to understanding how people use the product.',
   },
   {
-    slug: 'nfi-classwin', n: '06', title: 'NFI x Classwin', category: 'Website enhancement · Witsawa Corporation',
+    slug: 'nfi-classwin', n: '05', title: 'NFI x Classwin', category: 'Website enhancement · Witsawa Corporation',
     desc: 'Improved an existing website by resolving issues and delivering new features for a better user experience.',
     tags: ['Web Enhancement', 'Feature Development', 'Bug Fixes'], tone: 'classwin', preview: 'Website enhancement',
     context: 'An established website needed targeted fixes and additions to better support its users and ongoing product needs.',
@@ -156,21 +148,6 @@ export const projectCaseStudies: Record<string, CaseStudy> = {
     ],
     deliverables: ['Next.js CRM frontend', 'Responsive LINE LIFF experience', 'API-connected component system'],
   },
-  'ldb-pro': {
-    role: 'Frontend Developer',
-    focus: 'QR-assisted event participation',
-    story: [
-      'LDB Pro focuses on a specific operational moment: registering attendance for doctors and pharmacists at an event. That moment needs to be fast enough for on-site use, while still giving the team a clear way to verify participation.',
-      'The solution is a focused web module rather than a broad event platform. By keeping the scan-and-verify path direct, the interface reduces manual handling at the point where participants arrive.',
-    ],
-    responsibilities: ['Built a custom QR code scanning module.', 'Designed the attendee verification flow.', 'Focused the interface on practical on-site use.'],
-    workflow: [
-      { title: 'Scan the attendee code', detail: 'The operator begins with the QR code rather than searching manually through a participant list.' },
-      { title: 'Verify participation', detail: 'The module supports a clear confirmation step for the attendee record.' },
-      { title: 'Continue the event flow', detail: 'Verified participation becomes part of a more manageable event process for the team.' },
-    ],
-    deliverables: ['QR scanning module', 'Attendee verification workflow', 'Focused event web interface'],
-  },
   cmdf: {
     role: 'Frontend Developer',
     focus: 'From design direction to measurable product UI',
@@ -283,6 +260,7 @@ type VisualSlot = {
   caption: string;
   state: 'reserved' | 'restricted';
   src?: string;
+  fit?: 'cover' | 'contain';
 };
 
 type ProjectVisualRecord = {
@@ -312,15 +290,115 @@ const publicReadyVisuals = (scope: string): ProjectVisualRecord => ({
 });
 
 export const projectVisualRecords: Record<string, ProjectVisualRecord> = {
-  'nci-crm': limitedVisuals('Internal CRM data and role-specific screens are not shown in full.'),
-  'trr-admin-system': limitedVisuals('Operational dashboards and location information are shared only in approved form.'),
+  'nci-crm': {
+    disclosure: 'limited',
+    note: 'A public-safe sign-in view shows the NCI CRM entry experience. Internal CRM records, role-specific screens and patient-related information are not shown.',
+    slots: [
+      { title: 'NCI CRM sign-in', caption: 'Public-safe entry interface for the National Cancer Institute CRM.', state: 'reserved', src: '/images/nci-crm-sign-in.png' },
+      { title: 'CRM workflow', caption: 'Operational records and role-specific workflows remain private.', state: 'restricted' },
+      { title: 'System detail', caption: 'Sensitive CRM and patient-related information is not included.', state: 'restricted' },
+    ],
+  },
+  'trr-admin-system': {
+    disclosure: 'limited',
+    note: 'Selected public-safe views show the TRR operational system across calendar planning, field context and dashboard reporting. Additional operational records are not included.',
+    slots: [
+      { title: 'Calendar and CCS records', caption: 'Operational calendar paired with a chronological view of CCS information.', state: 'reserved', src: '/images/trr-calendar-ccs.png', fit: 'contain' },
+      { title: 'Farm plot map', caption: 'Map-based field context with a selected plot and cultivation summary.', state: 'reserved', src: '/images/trr-farm-plot-map.png', fit: 'contain' },
+      { title: 'Financial dashboard', caption: 'Revenue, expense and category-level reporting summary.', state: 'reserved', src: '/images/trr-financial-dashboard.png', fit: 'contain' },
+    ],
+  },
   'sos-wasty': limitedVisuals('CRM and LINE LIFF screens are represented only through approved excerpts.'),
-  'ldb-pro': limitedVisuals('Event-participant data is not included in public visuals.'),
-  cmdf: limitedVisuals('Product screens and analytics data require a public-safe treatment.'),
-  'nfi-classwin': limitedVisuals('The live website is represented through non-sensitive implementation evidence.'),
+  cmdf: {
+    disclosure: 'limited',
+    note: 'Selected public-safe interface captures show the Thai Startup landing experience and directory journey. Measurement configuration and other non-public product surfaces are omitted.',
+    slots: [
+      { title: 'Thai Startup Directory', caption: 'Public directory experience for exploring startups and ecosystem activity.', state: 'reserved', src: '/images/cmdf-thai-startup-directory.png' },
+      { title: 'Startup discovery and trending', caption: 'Search, filter and trending-startup discovery interface for the directory.', state: 'reserved', src: '/images/cmdf-thai-startup-discovery.png' },
+      { title: 'Thai Startup landing experience', caption: 'Public home-page interface connecting Thailand’s startup ecosystem.', state: 'reserved', src: '/images/cmdf-thai-startup-home.png' },
+    ],
+  },
+  'nfi-classwin': {
+    disclosure: 'limited',
+    note: 'Selected public-safe views show the learning platform journey from course discovery and course detail through to the operational dashboard. Other live-product screens are not included.',
+    slots: [
+      { title: 'Course landing page', caption: 'Public course-discovery entry point for learners and instructors.', state: 'reserved', src: '/images/nfi-classwin-course-landing.png', fit: 'contain' },
+      { title: 'Course detail', caption: 'Course information and enrollment experience for Software Engineering 101.', state: 'reserved', src: '/images/nfi-classwin-course-detail.png', fit: 'contain' },
+      { title: 'Learning dashboard', caption: 'Operational dashboard with learner, course and activity overview.', state: 'reserved', src: '/images/nfi-classwin-dashboard.png', fit: 'contain' },
+    ],
+  },
   'thai-address-select': publicReadyVisuals('This is an open-source npm package.'),
-  'pet-community-thailand': publicReadyVisuals('This is an independent full-stack build.'),
-  'tradingview-line-alert-bot': publicReadyVisuals('This is a personal notification automation, not a trading service.'),
-  'qa-mcp': publicReadyVisuals('The workflow can be shown through task, test and result views.'),
-  'kmitl-xchange': limitedVisuals('Team-project visuals can be added once the appropriate assets are selected.'),
+  'pet-community-thailand': {
+    disclosure: 'public-ready',
+    note: 'Selected project views show the public help-request experience, content operations and search performance for the independent build.',
+    slots: [
+      { title: 'Community help requests', caption: 'Public home page for connecting animal-help requests with the local community.', state: 'reserved', src: '/images/pet-community-home.png', fit: 'contain' },
+      { title: 'Content administration', caption: 'Admin console for reviewing and managing community article content.', state: 'reserved', src: '/images/pet-community-admin-content.png', fit: 'contain' },
+      { title: 'Search performance', caption: 'Google Search Console view used to monitor the site’s search visibility.', state: 'reserved', src: '/images/pet-community-search-console.png', fit: 'contain' },
+    ],
+  },
+  'tradingview-line-alert-bot': {
+    disclosure: 'public-ready',
+    note: 'This is a personal notification automation, not a trading service. The selected views show its technical boundary and the alert experience delivered to LINE.',
+    slots: [
+      {
+        title: 'Signal-to-LINE architecture',
+        caption: 'A stateless flow from TradingView market signals through a serverless webhook to LINE messaging.',
+        state: 'reserved',
+        src: '/images/tradingview-line-alert-architecture.png',
+        fit: 'contain',
+      },
+      {
+        title: 'Alert delivered to LINE',
+        caption: 'The incoming alert appears in the LINE chat list for quick notification awareness.',
+        state: 'reserved',
+        src: '/images/tradingview-line-alert-inbox.png',
+        fit: 'contain',
+      },
+      {
+        title: 'Structured signal detail',
+        caption: 'A formatted alert carries market context, entry levels, risk parameters and signal rationale.',
+        state: 'reserved',
+        src: '/images/tradingview-line-alert-detail.png',
+        fit: 'contain',
+      },
+    ],
+  },
+  'qa-mcp': {
+    disclosure: 'public-ready',
+    note: 'Selected QA MCP evidence shows the workflow architecture plus how the agent returns a plan or a completed result to the originating ClickUp task.',
+    slots: [
+      {
+        title: 'ClickUp QA automation flow',
+        caption: 'Architecture connecting ClickUp, webhooks, an AI QA agent, MCP tools and Playwright.',
+        state: 'reserved',
+        src: '/images/qa-mcp-automation-flow.png',
+        fit: 'contain',
+      },
+      {
+        title: 'QA plan returned to ClickUp',
+        caption: 'An AI-generated test plan requests the missing information needed to proceed safely.',
+        state: 'reserved',
+        src: '/images/qa-mcp-needs-information.png',
+        fit: 'contain',
+      },
+      {
+        title: 'QA result returned to ClickUp',
+        caption: 'Completed browser QA result posted back to the task with PASS evidence.',
+        state: 'reserved',
+        src: '/images/qa-mcp-pass-result.png',
+        fit: 'contain',
+      },
+    ],
+  },
+  'kmitl-xchange': {
+    disclosure: 'limited',
+    note: 'Selected prototype captures show the student marketplace from browsing and posting through to community activity and administration. Personal data and non-public flows are not included.',
+    slots: [
+      { title: 'Marketplace home', caption: 'Mobile browsing surface with search, categories and recommended items.', state: 'reserved', src: '/images/kmitl-xchange-marketplace-home.png', fit: 'contain' },
+      { title: 'Create a listing', caption: 'Mobile flow for adding an item to sell, share or offer for pre-order.', state: 'reserved', src: '/images/kmitl-xchange-create-listing.png', fit: 'contain' },
+      { title: 'Community feed', caption: 'Mobile posts surface for students to share useful updates and requests.', state: 'reserved', src: '/images/kmitl-xchange-community-feed.png', fit: 'contain' },
+      { title: 'Admin moderation dashboard', caption: 'Desktop operational view for reviewing marketplace listings.', state: 'reserved', src: '/images/kmitl-xchange-admin-dashboard.png', fit: 'contain' },
+    ],
+  },
 };

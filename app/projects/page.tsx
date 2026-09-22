@@ -15,7 +15,7 @@ export default function ProjectArchive() {
         <h1>The complete work archive.</h1>
         <p>Commissioned product systems, independent builds and academic work — each record documents the problem, scope and contribution behind the result.</p>
         <div className="archive-counts" aria-label="Project archive summary">
-          <div><span>06</span><b>Professional systems</b></div>
+          <div><span>05</span><b>Professional systems</b></div>
           <div><span>04</span><b>Independent builds</b></div>
           <div><span>01</span><b>Academic project</b></div>
         </div>
