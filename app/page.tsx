@@ -1,21 +1,27 @@
 'use client';
 
-import { ArrowRight, Bot, Cable, Download, GitBranch, Link2, Mail, Menu, X, Database, Server, Layers3, Container, Workflow, Wrench, ChevronUp } from 'lucide-react';
+import { ArrowRight, Bot, Cable, Code2, Download, GitBranch, Link2, Mail, Menu, X, Server, Layers3, Workflow, Wrench, ChevronUp } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
-import { independentProjects, projectCaseStudies, projects } from './projects';
+import { independentProjects, projects } from './projects';
+import { ProjectCard } from './project-card';
 
 const skills = [
-  ['Frontend','Angular / React / Next.js','Responsive interfaces and component-based UI',Layers3],
-  ['Backend','Laravel / NestJS / Strapi','Practical API integration for web applications',Server],
-  ['Programming','TypeScript / JavaScript / Python','Also experienced with Go, C and PHP',Database],
-  ['UI Development','Tailwind CSS / Ant Design','From design mockups to polished interfaces',Container],
-  ['Integration','REST API / GA4 / LINE LIFF','Connected experiences that support real workflows',Workflow],
-  ['AI-Assisted Development','Codex / Claude / Gemini CLI / Copilot','Rapid prototyping, implementation and code review',Bot],
-  ['MCP Workflows','Tool-connected AI development','Use project context and connected tools to research, build and debug faster',Cable],
-  ['Development Tools','VS Code / Docker / Git','A practical local workflow from build to delivery',Wrench],
+  ['Frontend & UI', 'Responsive interfaces, reusable components and product screens.', ['Angular', 'React', 'Next.js', 'Tailwind CSS', 'Ant Design'], Layers3],
+  ['Backend', 'Frameworks for services, API-connected workflows and content management.', ['Laravel', 'NestJS', 'Strapi'], Server],
+  ['Languages', 'Languages I use across interfaces, services and automation.', ['TypeScript', 'JavaScript', 'Python', 'Go', 'C', 'PHP'], Code2],
+  ['APIs & integrations', 'Connecting product workflows, external services and measurement.', ['REST API', 'GA4', 'LINE LIFF'], Cable],
+  ['AI & MCP workflows', 'Tool-connected research, prototyping, implementation and code review.', ['Codex', 'Claude', 'Gemini CLI', 'Copilot', 'MCP'], Bot],
+  ['Development tools', 'The everyday toolkit for local development, version control and delivery.', ['VS Code', 'Docker', 'Git'], Wrench],
 ] as const;
 
-const featuredProjectSlugs = ['qa-mcp', 'tradingview-line-alert-bot', 'nci-crm'];
+const engineeringApproach = [
+  ['Understand', 'Map the users, requirements and constraints.'],
+  ['Design', 'Define the journeys, data flow and API contracts.'],
+  ['Build', 'Connect interfaces, services and integrations.'],
+  ['Refine', 'Verify behavior and keep the system maintainable.'],
+] as const;
+
+const featuredProjectSlugs = ['qa-mcp', 'pet-community-thailand', 'nci-crm'];
 const portfolioProjects = [...projects, ...independentProjects];
 const featuredProjects = featuredProjectSlugs.flatMap((slug) => {
   const project = portfolioProjects.find((item) => item.slug === slug);
@@ -114,7 +120,7 @@ export default function Home() {
   const navItems = [
     { label: 'Home', id: 'home' },
     { label: 'Case studies', id: 'work' },
-    { label: 'Engineering notes', id: 'engineering' },
+    { label: 'Tech Stack', id: 'engineering' },
     { label: 'Experience', id: 'experience' },
   ];
 
@@ -151,9 +157,9 @@ export default function Home() {
             className={`nav-contact${activeSection === 'contact' ? ' active' : ''}`}
             href="#contact"
             onClick={close}
-          >Profile <ArrowRight size={14} /></a>
+          >Contact <ArrowRight size={14} /></a>
         </nav>
-        <button className="menu" onClick={() => setOpen(!open)} aria-label="Toggle menu">
+        <button className="menu" onClick={() => setOpen(!open)} aria-label="Toggle menu" aria-expanded={open}>
           {open ? <X /> : <Menu />}
         </button>
       </header>
@@ -191,6 +197,8 @@ export default function Home() {
               <p>I turn product requirements into <em>systems people can use with confidence.</em></p>
             </div>
             <p className="hero-about-copy">From the interface to the API layer, I build practical tools that stay clear for users and maintainable for the team behind them.</p>
+            <details className="hero-background">
+              <summary>Background &amp; approach</summary>
             <div className="hero-principles">
               <div><b>WHAT I BUILD</b><strong>Product UI &amp; connected systems</strong><span>CRM, admin tools and workflow-focused web applications.</span></div>
               <div><b>HOW I WORK</b><strong>Clear before clever</strong><span>Thoughtful UX, reliable handoffs and room to iterate.</span></div>
@@ -200,6 +208,7 @@ export default function Home() {
               <span><b>BACKGROUND</b>Computer Engineering · KMITL</span>
               <span><b>FOCUS</b>Full-stack systems &amp; product UI</span>
             </div>
+            </details>
           </div>
         </div>
         <div className="hero-visual">
@@ -247,25 +256,8 @@ export default function Home() {
           </div>
           <span className="work-index">03 FEATURED / 10 TOTAL</span>
         </div>
-        <div className="featured-grid">
-          {featuredProjects.map((project, index) => (
-            <article className={`featured-case featured-case-${index + 1} reveal`} key={project.slug}>
-              <div className="featured-case-top">
-                <span>FEATURED / 0{index + 1}</span>
-                <small>{project.category}</small>
-              </div>
-              <div className="featured-case-copy">
-                <p>{index === 0 ? 'AI QA WORKFLOW' : index === 1 ? 'PERSONAL AUTOMATION' : 'PRODUCTION SYSTEM'}</p>
-                <h3>{project.title}</h3>
-                <strong>{projectCaseStudies[project.slug].focus}</strong>
-                <span>{project.desc}</span>
-              </div>
-              <div className="featured-case-bottom">
-                <div className="tags">{project.tags.slice(0, 3).map(tag => <span key={tag}>{tag}</span>)}</div>
-                <a className="case" href={`/work/${project.slug}`}>Read Case Study <ArrowRight size={14} /></a>
-              </div>
-            </article>
-          ))}
+        <div className="selected-work-grid project-card-grid">
+          {featuredProjects.map(project => <ProjectCard project={project} reveal key={project.slug} />)}
         </div>
         <div className="work-archive-control reveal">
           <div>
@@ -277,53 +269,38 @@ export default function Home() {
       </section>
 
       {/* Engineering */}
-      <section id="engineering" className="section engineering section-pad">
+      <section id="engineering" className="section tech-stack section-pad" aria-labelledby="tech-stack-title">
         <div className="section-head reveal">
           <div>
             <p className="eyebrow">TECH STACK &amp; TOOLS</p>
-            <h2>The stack behind the systems.</h2>
-            <p>A practical toolkit for shipping product interfaces, connected workflows and reliable delivery — used throughout the work records above.</p>
+            <h2 id="tech-stack-title">Tools for the whole stack.</h2>
+            <p>The frameworks, languages and tools I use to connect interfaces, services and everyday workflows.</p>
           </div>
         </div>
-        <div className="engineering-grid">
-          <div className="architecture reveal">
-            <div className="architecture-head">
-              <p>FULL-STACK APPROACH</p>
-              <span>PRODUCT TO DELIVERY / 01—04</span>
-            </div>
-            <div className="workflow">
-              <div className="workflow-step">
-                <span>01</span>
-                <div><b>Understand the product context</b><p>Map users, rules, data and constraints before defining the solution.</p></div>
+        <div className="tech-stack-grid">
+          {skills.map(([name, description, tools, Icon]) => (
+            <article className={`tech-stack-card reveal${name === 'AI & MCP workflows' ? ' tech-stack-card-ai' : ''}`} key={name}>
+              <div className="tech-stack-card-heading">
+                <span className="tech-stack-icon"><Icon size={21} strokeWidth={1.7} aria-hidden="true" /></span>
+                <h3>{name}</h3>
               </div>
-              <div className="workflow-step">
-                <span>02</span>
-                <div><b>Design the system flow</b><p>Turn requirements into clear journeys, interface states and API contracts.</p></div>
-              </div>
-              <div className="workflow-step featured">
-                <span>03</span>
-                <div><b>Build across the stack</b><p>Connect frontend, backend services, data and external tools into one workflow.</p></div>
-              </div>
-              <div className="workflow-step">
-                <span>04</span>
-                <div><b>Deliver, observe, improve</b><p>Ship maintainable work, verify behavior and refine it through real use.</p></div>
-              </div>
-            </div>
-            <div className="tool-rail">
-              <span>CLIENT</span><p>Angular · React · Next.js</p>
-              <span>SERVICES</span><p>Laravel · NestJS · REST API</p>
-              <span>OPERATE</span><p>GA4 · Docker · Git</p>
-            </div>
-            <div className="architecture-stamp">BUILT<br />TO<br /><i>OPERATE</i></div>
+              <p>{description}</p>
+              <ul className="tech-stack-tags" aria-label={`${name} tools`}>
+                {tools.map(tool => <li key={tool}>{tool}</li>)}
+              </ul>
+            </article>
+          ))}
+        </div>
+        <div className="tech-stack-approach reveal">
+          <div className="tech-stack-approach-heading">
+            <Workflow size={20} strokeWidth={1.7} aria-hidden="true" />
+            <div><p className="eyebrow">FULL-STACK APPROACH</p><h3>How I put the tools to work.</h3></div>
           </div>
-          <div className="skill-grid">
-            {skills.map(([name, a, b, Icon], i) => (
-              <div className="skill reveal" key={name} style={{ transitionDelay: `${i * 65}ms` }}>
-                <Icon size={19} />
-                <div><b>{name}</b><span>{a}</span><small>{b}</small></div>
-              </div>
+          <ol className="tech-stack-process">
+            {engineeringApproach.map(([title, description], index) => (
+              <li key={title}><span aria-hidden="true">0{index + 1}</span><h4>{title}</h4><p>{description}</p></li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 
@@ -333,40 +310,51 @@ export default function Home() {
         <div className="experience-layout experience-layout-alternating reveal">
           <div className="experience-main">
           <p className="eyebrow">EXPERIENCE TIMELINE</p>
-          <h2>Product work across internal systems and real-world workflows.</h2>
+          <h2>Where I&apos;ve put it into practice.</h2>
           <div className="experience-timeline-head" aria-label="Timeline summary">
             <span>CAREER RECORD / 03 MILESTONES</span>
             <span>PRODUCT SYSTEMS · CRM · AUTOMATION</span>
           </div>
           <div className="timeline">
-            <div className="timeline-entry">
-              <div className="timeline-index"><span>01</span><small>CAREER<br />RECORD</small></div>
+            <div className="timeline-entry timeline-entry-current">
+              <div className="timeline-index"><span>NOW</span><small>2025 — PRESENT</small></div>
               <article className="timeline-content">
-                <div className="timeline-card-top"><b>WITSAWA CORPORATION CO., LTD.</b><span>PRODUCT DELIVERY</span></div>
+                <div className="timeline-card-top"><b>WITSAWA CORPORATION CO., LTD.</b><div className="timeline-card-meta"><time>2025 — PRESENT</time><span>CURRENT · PRODUCT DELIVERY</span></div></div>
                 <strong>Web Applications &amp; Enhancements</strong>
                 <p className="timeline-scope">Eastspring · LDB Pro · CMDF · Well Kid · NFI x Classwin</p>
-                <p>Contributed to a varied portfolio of web initiatives, helping teams turn operational requirements, existing systems and design direction into more reliable digital experiences. The work ranged from compatibility improvements and focused workflow tools to user-interface delivery, analytics and ongoing product enhancement.</p>
-                <p>For Eastspring, helped bridge the gap between Internet Explorer and modern browsers. Built a custom QR code scanning module for LDB Pro to support event participation by doctors and pharmacists, transformed CMDF design mockups into working UI with Google Analytics 4, resolved Well Kid library incompatibilities after SDK updates, and improved the NFI x Classwin website through fixes and new features.</p>
+                <ul className="timeline-highlights">
+                  <li>Built CMDF interfaces from supplied designs and integrated Google Analytics 4.</li>
+                  <li>Delivered fixes and features for NFI x Classwin, plus browser and SDK compatibility work for Eastspring and Well Kid.</li>
+                  <li>Built an event QR-scanning module for LDB Pro.</li>
+                </ul>
+                <div className="timeline-project-links"><a href="/work/cmdf">CMDF ↗</a><a href="/work/nfi-classwin">NFI x Classwin ↗</a></div>
               </article>
             </div>
             <div className="timeline-entry">
-              <div className="timeline-index"><span>02</span><small>CAREER<br />RECORD</small></div>
+              <div className="timeline-index"><span>2025</span></div>
               <article className="timeline-content">
-                <div className="timeline-card-top"><b>ASCEND CO., LTD.</b><span>CONNECTED WORKFLOW</span></div>
+                <div className="timeline-card-top"><b>ASCEND CO., LTD.</b><div className="timeline-card-meta"><time>2025</time><span>CONNECTED WORKFLOW</span></div></div>
                 <strong>CRM &amp; LINE LIFF</strong>
                 <p className="timeline-scope">SOS Wasty</p>
-                <p>Worked on SOS Wasty, a CRM and LINE LIFF experience designed to keep workflows accessible across devices. The focus was on delivering a clear, responsive frontend while ensuring the interface connected smoothly with the underlying APIs.</p>
-                <p>Used Next.js, Tailwind CSS and Ant Design to build polished interface components and responsive layouts. The result was a practical customer-facing and operational experience that brings CRM interactions into the LINE ecosystem without compromising usability.</p>
+                <ul className="timeline-highlights">
+                  <li>Built responsive CRM and LINE LIFF interfaces for SOS Wasty.</li>
+                  <li>Connected screens to project APIs using Next.js, Tailwind CSS and Ant Design.</li>
+                </ul>
+                <div className="timeline-project-links"><a href="/work/sos-wasty">SOS Wasty ↗</a></div>
               </article>
             </div>
             <div className="timeline-entry">
-              <div className="timeline-index"><span>03</span><small>CAREER<br />RECORD</small></div>
+              <div className="timeline-index"><span>2024</span></div>
               <article className="timeline-content">
-                <div className="timeline-card-top"><b>ASHA TECH CORPORATION</b><span>INTERNAL OPERATIONS</span></div>
+                <div className="timeline-card-top"><b>ASHA TECH CORPORATION</b><div className="timeline-card-meta"><time>2024 — 2025</time><span>INTERNAL OPERATIONS</span></div></div>
                 <strong>CRM &amp; Admin Systems</strong>
                 <p className="timeline-scope">NCI CRM · TRR Admin System</p>
-                <p>Developed web interfaces for CRM and administrative workflows where usability, access control and clear information management were central to the product. This included building responsive screens that help internal teams work confidently with forms, data and day-to-day operational tasks.</p>
-                <p>For the National Cancer Institute CRM, created role-based user permissions with Angular and Tailwind CSS, then developed responsive forms connected to APIs for internal staff. For Thai Roong Ruang Group, built an admin system with dashboards, charts, calendars, data tables and forms, including location views generated from latitude and longitude data.</p>
+                <ul className="timeline-highlights">
+                  <li>Built role-aware NCI CRM screens and API-connected forms with Angular and Tailwind CSS.</li>
+                  <li>Developed TRR dashboards, calendars, tables and forms for internal operations.</li>
+                  <li>Added map views using latitude and longitude data.</li>
+                </ul>
+                <div className="timeline-project-links"><a href="/work/nci-crm">NCI CRM ↗</a><a href="/work/trr-admin-system">TRR Admin ↗</a></div>
               </article>
             </div>
           </div>

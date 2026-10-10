@@ -5,7 +5,7 @@ export const projects = [
     tags: ['Angular', 'Tailwind CSS', 'Role-based Access', 'API Integration'], tone: 'nci', preview: 'Internal CRM workspace',
     context: 'Internal teams needed a clear CRM interface that respected user roles while keeping everyday data entry straightforward.',
     contribution: 'Built the Angular and Tailwind CSS frontend, created role-based permissions, and developed responsive forms connected to project APIs.',
-    outcome: 'Delivered a structured internal workspace designed to make access, form completion and daily CRM workflows easier to manage.',
+    outcome: 'Delivered Angular CRM screens with role-based permissions and responsive forms connected to project APIs for internal staff.',
   },
   {
     slug: 'trr-admin-system', n: '02', title: 'TRR Admin System', category: 'Admin Platform · Thai Roong Ruang Group',
@@ -13,7 +13,7 @@ export const projects = [
     tags: ['Angular', 'Tailwind CSS', 'Dashboards', 'Maps'], tone: 'trr', preview: 'Admin dashboard',
     context: 'Operational data needed to be easier to review, update and understand across dashboards, schedules and location-based information.',
     contribution: 'Developed the Angular frontend with dashboard charts, calendars, forms, data tables and map views generated from latitude and longitude.',
-    outcome: 'Created an admin experience that brings essential management tools and information into one responsive interface.',
+    outcome: 'Delivered an Angular admin interface combining charts, calendars, data tables, forms and coordinate-based map views.',
   },
   {
     slug: 'sos-wasty', n: '03', title: 'SOS Wasty', category: 'CRM & LINE LIFF · Ascend Co., Ltd.',
@@ -21,7 +21,7 @@ export const projects = [
     tags: ['Next.js', 'Tailwind CSS', 'Ant Design', 'LINE LIFF'], tone: 'sos', preview: 'CRM and LINE LIFF',
     context: 'CRM workflows needed a responsive interface that could work naturally within the LINE ecosystem and stay connected to project APIs.',
     contribution: 'Built the frontend with Next.js, Tailwind CSS and Ant Design, then integrated API-driven experiences for the CRM and LINE LIFF flows.',
-    outcome: 'Delivered a polished, responsive experience that supports customer-facing and operational interactions across devices.',
+    outcome: 'Delivered responsive CRM and LINE LIFF screens using Next.js, Tailwind CSS and Ant Design, connected to project APIs.',
   },
   {
     slug: 'cmdf', n: '04', title: 'CMDF', category: 'Product interface · Witsawa Corporation',
@@ -29,7 +29,7 @@ export const projects = [
     tags: ['UI Implementation', 'Google Analytics 4', 'Product UI'], tone: 'cmdf', preview: 'Product interface',
     context: 'The product needed design mockups translated into a cohesive working interface, with measurement in place for future product decisions.',
     contribution: 'Implemented the supplied design direction as polished UI and connected Google Analytics 4 for product measurement.',
-    outcome: 'Created a production-ready interface with a clearer path to understanding how people use the product.',
+    outcome: 'Implemented the supplied CMDF designs as working interfaces and integrated Google Analytics 4 for product measurement.',
   },
   {
     slug: 'nfi-classwin', n: '05', title: 'NFI x Classwin', category: 'Website enhancement · Witsawa Corporation',
@@ -37,7 +37,7 @@ export const projects = [
     tags: ['Web Enhancement', 'Feature Development', 'Bug Fixes'], tone: 'classwin', preview: 'Website enhancement',
     context: 'An established website needed targeted fixes and additions to better support its users and ongoing product needs.',
     contribution: 'Resolved existing issues and delivered new features while working within the constraints of an active website.',
-    outcome: 'Improved the experience through practical enhancements that made the product more reliable and useful.',
+    outcome: 'Delivered fixes and new features within the existing NFI x Classwin website.',
   },
 ] as const;
 

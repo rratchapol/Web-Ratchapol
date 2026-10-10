@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './portfolio-refinements.css';
+import './project-system.css';
+import './tech-stack.css';
 
 export const metadata: Metadata = {
   title: 'Ratchapol Rujiwatch — Full-stack Developer',
