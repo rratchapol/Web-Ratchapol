@@ -4,14 +4,15 @@ import { ArrowRight, Bot, Cable, Code2, Download, GitBranch, Link2, Mail, Menu, 
 import { useState, useEffect, useRef } from 'react';
 import { independentProjects, projects } from './projects';
 import { ProjectCard } from './project-card';
+import { TechToolIcon } from './tech-tool-icon';
 
 const skills = [
-  ['Frontend & UI', 'Responsive interfaces, reusable components and product screens.', ['Angular', 'React', 'Next.js', 'Tailwind CSS', 'Ant Design'], Layers3],
-  ['Backend', 'Frameworks for services, API-connected workflows and content management.', ['Laravel', 'NestJS', 'Strapi'], Server],
-  ['Languages', 'Languages I use across interfaces, services and automation.', ['TypeScript', 'JavaScript', 'Python', 'Go', 'C', 'PHP'], Code2],
-  ['APIs & integrations', 'Connecting product workflows, external services and measurement.', ['REST API', 'GA4', 'LINE LIFF'], Cable],
-  ['AI & MCP workflows', 'Tool-connected research, prototyping, implementation and code review.', ['Codex', 'Claude', 'Gemini CLI', 'Copilot', 'MCP'], Bot],
-  ['Development tools', 'The everyday toolkit for local development, version control and delivery.', ['VS Code', 'Docker', 'Git'], Wrench],
+  ['Frontend & UI', 'Reusable components and responsive product interfaces.', ['Angular', 'React', 'Next.js', 'Tailwind CSS', 'Ant Design'], Layers3],
+  ['Backend', 'Application services, APIs and content management.', ['Laravel', 'NestJS', 'Strapi'], Server],
+  ['Languages', 'Typed applications, scripting and automation.', ['TypeScript', 'JavaScript', 'Python', 'Go', 'C', 'PHP'], Code2],
+  ['APIs & integrations', 'External services, analytics and messaging.', ['REST API', 'GA4', 'LINE LIFF'], Cable],
+  ['AI & MCP workflows', 'Tool-connected research, implementation and review.', ['Codex', 'Claude', 'Gemini CLI', 'Copilot', 'MCP'], Bot],
+  ['Development tools', 'Local development, version control and delivery.', ['VS Code', 'Docker', 'Git'], Wrench],
 ] as const;
 
 const engineeringApproach = [
@@ -270,26 +271,32 @@ export default function Home() {
 
       {/* Engineering */}
       <section id="engineering" className="section tech-stack section-pad" aria-labelledby="tech-stack-title">
-        <div className="section-head reveal">
-          <div>
+        <div className="tech-stack-layout">
+          <div className="tech-stack-intro reveal">
             <p className="eyebrow">TECH STACK &amp; TOOLS</p>
-            <h2 id="tech-stack-title">Tools for the whole stack.</h2>
-            <p>The frameworks, languages and tools I use to connect interfaces, services and everyday workflows.</p>
+            <h2 id="tech-stack-title">Built across<br />the stack.</h2>
+            <p>From the interface people use to the services behind it — the tools I work with across the stack.</p>
+            <div className="tech-stack-layers" aria-label="Full-stack scope">
+              <div><Layers3 size={20} aria-hidden="true" /><span><strong>Interfaces</strong><small>Product screens &amp; user journeys</small></span></div>
+              <div><Server size={20} aria-hidden="true" /><span><strong>Services</strong><small>APIs, data &amp; application logic</small></span></div>
+              <div><Workflow size={20} aria-hidden="true" /><span><strong>Workflows</strong><small>Integrations, automation &amp; delivery</small></span></div>
+            </div>
+            <p className="tech-stack-intro-note">Different tools. One connected product.</p>
           </div>
-        </div>
-        <div className="tech-stack-grid">
-          {skills.map(([name, description, tools, Icon]) => (
-            <article className={`tech-stack-card reveal${name === 'AI & MCP workflows' ? ' tech-stack-card-ai' : ''}`} key={name}>
-              <div className="tech-stack-card-heading">
-                <span className="tech-stack-icon"><Icon size={21} strokeWidth={1.7} aria-hidden="true" /></span>
-                <h3>{name}</h3>
-              </div>
-              <p>{description}</p>
-              <ul className="tech-stack-tags" aria-label={`${name} tools`}>
-                {tools.map(tool => <li key={tool}>{tool}</li>)}
-              </ul>
-            </article>
-          ))}
+          <div className="tech-stack-grid">
+            {skills.map(([name, description, tools, Icon]) => (
+              <article className="tech-stack-card reveal" key={name}>
+                <div className="tech-stack-card-heading">
+                  <span className="tech-stack-icon"><Icon size={21} strokeWidth={1.7} aria-hidden="true" /></span>
+                  <h3>{name}</h3>
+                </div>
+                <p>{description}</p>
+                <ul className="tech-stack-tags" aria-label={`${name} tools`}>
+                  {tools.map(tool => <li key={tool}><TechToolIcon name={tool} /><span>{tool}</span></li>)}
+                </ul>
+              </article>
+            ))}
+          </div>
         </div>
         <div className="tech-stack-approach reveal">
           <div className="tech-stack-approach-heading">
