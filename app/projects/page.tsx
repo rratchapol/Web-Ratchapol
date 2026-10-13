@@ -1,6 +1,11 @@
+import Link from 'next/link';
 import { academicProjects, independentProjects, projects } from '../projects';
 import { ProjectCard } from '../project-card';
 import { ProjectNavigation } from '../project-navigation';
+import { pageMetadata, profileName, siteUrl, websiteId } from '../seo';
+import { StructuredData } from '../structured-data';
+
+export const metadata = pageMetadata(`Developer Projects & Case Studies — ${profileName}`, 'Explore 10 professional, independent and academic projects, with implementation workflows and Ratchapol’s contributions to CRM, automation and full-stack systems.', '/projects', '/projects/opengraph-image');
 
 const projectGroups = [
   { id: 'professional', title: 'Professional work', description: 'Product systems built with teams, for day-to-day operations.', projects },
@@ -11,7 +16,18 @@ const projectGroups = [
 export default function ProjectArchive() {
   return (
     <main className="project-archive">
+      <StructuredData data={{
+        '@context': 'https://schema.org', '@type': 'CollectionPage', url: `${siteUrl}/projects`,
+        name: 'Developer Projects & Case Studies', isPartOf: { '@id': websiteId },
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: [...projects, ...independentProjects, ...academicProjects].map((project, index) => ({
+            '@type': 'ListItem', position: index + 1, name: project.title, url: `${siteUrl}/work/${project.slug}`,
+          })),
+        },
+      }} />
       <ProjectNavigation archive />
+      <nav className="project-breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><span aria-hidden="true">/</span><span aria-current="page">Projects</span></nav>
       <header className="project-archive-header">
         <p className="eyebrow">WORK RECORD</p>
         <h1>All projects.</h1>

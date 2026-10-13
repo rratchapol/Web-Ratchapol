@@ -223,3 +223,7 @@
   .project-card:hover, .project-card:hover .project-card-preview img { transform: none; }
   .project-detail .detail-media-slot, .project-detail .detail-media-frame { transition: none; }
 }
+.project-breadcrumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 24px; color: var(--muted); font-size: 12px; }
+.project-breadcrumbs a:hover { color: var(--blue); }
+.detail-evidence p, .project-detail .detail-section > p { color: var(--muted); font-size: 15px; line-height: 1.85; }
+.detail-evidence + .detail-evidence { margin-top: 24px; }

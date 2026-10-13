@@ -4,11 +4,20 @@ import { notFound } from 'next/navigation';
 import { academicProjects, independentProjects, projectCaseStudies, projectVisualRecords, projects } from '../../projects';
 import { ProjectVisualGallery } from '../project-visual-gallery';
 import { ProjectNavigation } from '../../project-navigation';
+import { pageMetadata, profileId, profileName, siteUrl } from '../../seo';
+import { StructuredData } from '../../structured-data';
 
 const detailProjects = [...projects, ...independentProjects, ...academicProjects];
 
 export function generateStaticParams() {
   return detailProjects.map(({ slug }) => ({ slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const project = detailProjects.find((item) => item.slug === slug);
+  if (!project) notFound();
+  return pageMetadata(`${project.title} Case Study — ${profileName}`, project.desc, `/work/${slug}`, `/work/${slug}/opengraph-image`);
 }
 
 export default async function ProjectDetail({ params }: { params: Promise<{ slug: string }> }) {
@@ -23,7 +32,25 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
 
   return (
     <main className="project-detail">
+      <StructuredData data={{
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'CreativeWork', '@id': `${siteUrl}/work/${slug}#case-study`,
+            name: `${project.title} — Case Study`, description: project.desc, url: `${siteUrl}/work/${slug}`,
+            creator: { '@id': profileId }, inLanguage: 'en', keywords: project.tags.join(', '),
+          },
+          {
+            '@type': 'BreadcrumbList', itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: `${siteUrl}/` },
+              { '@type': 'ListItem', position: 2, name: 'Projects', item: `${siteUrl}/projects` },
+              { '@type': 'ListItem', position: 3, name: project.title, item: `${siteUrl}/work/${slug}` },
+            ],
+          },
+        ],
+      }} />
       <ProjectNavigation />
+      <nav className="project-breadcrumbs" aria-label="Breadcrumb"><Link href="/">Home</Link><span aria-hidden="true">/</span><Link href="/projects">Projects</Link><span aria-hidden="true">/</span><span aria-current="page">{project.title}</span></nav>
       <Link className="project-back-link" href="/projects"><ArrowLeft size={15} /> All projects</Link>
       <section className="detail-hero">
         <div className="detail-hero-copy">
@@ -47,6 +74,8 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
           <a href="#ownership">02 / Ownership</a>
           <a href="#workflow">03 / Workflow</a>
           <a href="#delivered">04 / Delivered</a>
+          {caseStudy.evidence ? <a href="#evidence">05 / Evidence</a> : null}
+          {caseStudy.limitations ? <a href="#scope">Scope</a> : null}
         </aside>
         <div className="detail-content">
           <article id="brief" className="detail-introduction">
@@ -73,6 +102,16 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
             <div className="detail-section-heading"><p className="eyebrow">04 / DELIVERED</p><h2>Concrete outputs.</h2></div>
             <div className="detail-deliverable-list">{caseStudy.deliverables.map((item) => <div key={item}><Layers3 size={15} aria-hidden="true" /><span>{item}</span></div>)}</div>
           </article>
+
+          {caseStudy.evidence ? <article id="evidence" className="detail-section">
+            <div className="detail-section-heading"><p className="eyebrow">05 / EVIDENCE</p><h2>What the captures demonstrate.</h2></div>
+            {caseStudy.evidence.map((item) => <div className="detail-evidence" key={item.title}><h3>{item.title}</h3><p>{item.detail}</p></div>)}
+          </article> : null}
+
+          {caseStudy.limitations ? <article id="scope" className="detail-section">
+            <div className="detail-section-heading"><p className="eyebrow">SCOPE &amp; LIMITATIONS</p><h2>How to read this case study.</h2></div>
+            <p>{caseStudy.limitations}</p>
+          </article> : null}
 
           <article className="detail-outcome">
             <p className="eyebrow">OUTCOME</p>

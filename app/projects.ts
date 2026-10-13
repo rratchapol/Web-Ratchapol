@@ -4,8 +4,8 @@ export const projects = [
     desc: 'An internal CRM for the National Cancer Institute, with role-based access, responsive forms and API integration.',
     tags: ['Angular', 'Tailwind CSS', 'Role-based Access', 'API Integration'], tone: 'nci', preview: 'Internal CRM workspace',
     context: 'Internal teams needed a clear CRM interface that respected user roles while keeping everyday data entry straightforward.',
-    contribution: 'Built the Angular and Tailwind CSS frontend, created role-based permissions, and developed responsive forms connected to project APIs.',
-    outcome: 'Delivered Angular CRM screens with role-based permissions and responsive forms connected to project APIs for internal staff.',
+    contribution: 'Built the Angular and Tailwind CSS frontend, implemented role-aware interface states, and developed responsive forms connected to project APIs.',
+    outcome: 'Delivered Angular CRM screens with role-aware interface states and responsive forms connected to project APIs for internal staff.',
   },
   {
     slug: 'trr-admin-system', n: '02', title: 'TRR Admin System', category: 'Admin Platform · Thai Roong Ruang Group',
@@ -100,6 +100,8 @@ type CaseStudy = {
   responsibilities: readonly string[];
   workflow: readonly { title: string; detail: string }[];
   deliverables: readonly string[];
+  evidence?: readonly { title: string; detail: string }[];
+  limitations?: string;
 };
 
 export const projectCaseStudies: Record<string, CaseStudy> = {
@@ -117,6 +119,7 @@ export const projectCaseStudies: Record<string, CaseStudy> = {
       { title: 'Sync the action with APIs', detail: 'Frontend states are connected to project APIs so submitted information moves into the wider CRM flow.' },
     ],
     deliverables: ['Role-aware CRM interface', 'Responsive form system', 'API-integrated frontend workflow'],
+    limitations: 'This case study covers my frontend contribution: role-aware screens, forms and API integration. Server-side authorization is outside the scope described here. The public preview is limited to the sign-in screen; internal records and patient information are not shown.',
   },
   'trr-admin-system': {
     role: 'Frontend Developer',
@@ -237,6 +240,12 @@ export const projectCaseStudies: Record<string, CaseStudy> = {
       { title: 'Write the result back to the task', detail: 'A PASS or FAIL summary is posted to ClickUp so the test result stays alongside the requirement.' },
     ],
     deliverables: ['ClickUp webhook workflow', 'MCP-connected QA agent', 'Playwright browser-validation loop', 'Task-level QA result summary'],
+    evidence: [
+      { title: 'A task needs clearer criteria', detail: 'The plan screenshot records NEEDS INFORMATION when a task provides a URL and a short description without enough business requirements, user steps or acceptance criteria.' },
+      { title: 'Browser output is checked', detail: 'The result screenshot records a PASS for checking that the requested bird content is displayed on the test website, including the heading and supporting details.' },
+      { title: 'Evidence returns to the task', detail: 'The completed ClickUp comment includes a check summary and an attached browser screenshot, keeping the reported result alongside the original requirement.' },
+    ],
+    limitations: 'These captures demonstrate a plan and a completed content-display check. They are not a benchmark of test coverage, accuracy or time saved, and a reported PASS applies to the checks described in that task rather than the entire product.',
   },
   'kmitl-xchange': {
     role: 'Team Project Contributor',
